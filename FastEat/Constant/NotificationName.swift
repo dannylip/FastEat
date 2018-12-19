@@ -8,6 +8,6 @@
 
 import Foundation
 
-class NotificationName {
+struct NotificationName {
     static let didUpdateLocations = Notification.Name("didUpdateLocations")
 }

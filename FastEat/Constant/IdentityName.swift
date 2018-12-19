@@ -8,7 +8,7 @@
 
 import Foundation
 
-class IdentityName {
+struct IdentityName {
     static let tableCellIden = "RestaurantCell"
     static let showRestDetailIden = "showRestDetail"
     static let foodItemtableCellIden = "showFoodItemCell"
