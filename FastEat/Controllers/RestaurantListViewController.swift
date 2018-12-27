@@ -55,6 +55,7 @@ class RestaurantListViewController: UIViewController {
         restListTableView.addSubview(refreshControl)
         restListTableView.delegate = self
         restListTableView.dataSource = self
+        restListTableView.delaysContentTouches = false
     }
     
     private func setupLocationBtn() {
@@ -131,11 +132,11 @@ class RestaurantListViewController: UIViewController {
     }
     
     private func updateRestListByUserAddress(userAddress: String) {
-        if userAddress == "" {
-            self.locationBtn.setTitle("所有餐廳", for: .normal)
-        } else {
-            self.locationBtn.setTitle("現在位置： \(userAddress)", for: .normal)
-        }
+//        if userAddress == "" {
+//            self.locationBtn.setTitle("所有餐廳", for: .normal)
+//        } else {
+        self.locationBtn.setTitle("現在位置： \(userAddress)", for: .normal)
+//        }
         self.userLocation = userAddress
         self.getRestaurantInfoByJson()
     }
@@ -146,9 +147,9 @@ class RestaurantListViewController: UIViewController {
         actionSheet.settings.animation.scale = nil
         actionSheet.headerData = "送餐地址"
         
-        actionSheet.addAction(Action(ActionData(title: "所有餐廳", image: UIImage(named: "store")!), style: .default, handler: { action in
-            self.updateRestListByUserAddress(userAddress: "")
-        }))
+//        actionSheet.addAction(Action(ActionData(title: "所有餐廳", image: UIImage(named: "store")!), style: .default, handler: { action in
+//            self.updateRestListByUserAddress(userAddress: "")
+//        }))
         actionSheet.addAction(Action(ActionData(title: "送餐到別的位置", image: UIImage(named: "map")!), style: .default, handler: { action in
             let mapVC = self.storyboard?.instantiateViewController(withIdentifier: "mapViewController") as! MapViewController
             mapVC.locationDelegate = self

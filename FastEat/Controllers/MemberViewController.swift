@@ -30,7 +30,6 @@ class MemberViewController: UIViewController {
     
     private lazy var inputStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nameTextField, emailTextField, passwordTextField])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 5
         stackView.distribution = .fillEqually
@@ -41,13 +40,20 @@ class MemberViewController: UIViewController {
         let tf = UITextField()
         tf.placeholder = "姓名"
         setupBasicTextField(tf: tf)
+        tf.snp.makeConstraints {
+            $0.height.equalTo(50)
+        }
         return tf
     }()
     
     private lazy var emailTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "電郵地址"
+        tf.keyboardType = .emailAddress
         setupBasicTextField(tf: tf)
+        tf.snp.makeConstraints {
+            $0.height.equalTo(50)
+        }
         return tf
     }()
     
@@ -56,6 +62,9 @@ class MemberViewController: UIViewController {
         tf.placeholder = "密碼"
         tf.isSecureTextEntry = true
         setupBasicTextField(tf: tf)
+        tf.snp.makeConstraints {
+            $0.height.equalTo(50)
+        }
         return tf
     }()
     
@@ -80,15 +89,22 @@ class MemberViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         initViews()
         
         noodlesAnimationView.loopAnimation = true
         noodlesAnimationView.play()
     }
-
+    
     private func initViews() {
         
+        setupInputStackView()
+        setupSegmentControl()
+        setupAnimationView()
+        setupRegisterBtn()
+    }
+    
+    private func setupInputStackView(){
         view.addSubview(inputStackView)
         
         inputStackView.snp.makeConstraints {
@@ -96,22 +112,6 @@ class MemberViewController: UIViewController {
             $0.trailing.equalTo(-15)
             $0.centerX.equalToSuperview()
             $0.centerY.equalToSuperview().offset(12)
-            $0.height.equalTo(152)
-        }
-//        setupInputContainerView()
-        setupSegmentControl()
-        setupAnimationView()
-        setupRegisterBtn()
-    }
-    
-    private func setupAnimationView() {
-        view.addSubview(noodlesAnimationView)
-        
-        noodlesAnimationView.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.bottom.equalTo(segmentedControl.snp.top).offset(-10)
-            $0.width.equalTo(175)
-            $0.height.equalTo(175)
         }
     }
     
@@ -125,59 +125,17 @@ class MemberViewController: UIViewController {
             $0.height.equalTo(30)
         }
     }
-    
-//    private func setupInputContainerView(){
-//        view.addSubview(inputContainerView)
-//
-//        inputContainerView.snp.makeConstraints {
-//            $0.leading.equalTo(15)
-//            $0.trailing.equalTo(-15)
-//            $0.centerX.equalToSuperview()
-//            $0.centerY.equalToSuperview().offset(12)
-//            $0.height.equalTo(152)
-//        }
-//
-//        inputContainerView.addSubview(nameTextField)
-//        inputContainerView.addSubview(nameSeparatorLine)
-//        inputContainerView.addSubview(emailTextField)
-//        inputContainerView.addSubview(emailSeparatorLine)
-//        inputContainerView.addSubview(passwordTextField)
-//
-//        nameTextField.snp.makeConstraints {
-//            $0.leading.equalTo(inputContainerView.snp.leading).offset(12)
-//            $0.trailing.equalTo(inputContainerView.snp.trailing).offset(-12)
-//            $0.top.equalToSuperview()
-//            $0.height.equalTo(50)
-//        }
-//
-//        nameSeparatorLine.snp.makeConstraints {
-//            $0.leading.equalTo(inputContainerView.snp.leading)
-//            $0.trailing.equalTo(inputContainerView.snp.trailing)
-//            $0.top.equalTo(nameTextField.snp.bottom)
-//            $0.height.equalTo(1)
-//        }
-//
-//        emailTextField.snp.makeConstraints {
-//            $0.leading.equalTo(inputContainerView.snp.leading).offset(12)
-//            $0.trailing.equalTo(inputContainerView.snp.trailing).offset(-12)
-//            $0.top.equalTo(nameSeparatorLine.snp.bottom)
-//            $0.height.equalTo(50)
-//        }
-//
-//        emailSeparatorLine.snp.makeConstraints {
-//            $0.leading.equalTo(inputContainerView.snp.leading)
-//            $0.trailing.equalTo(inputContainerView.snp.trailing)
-//            $0.top.equalTo(emailTextField.snp.bottom)
-//            $0.height.equalTo(1)
-//        }
-//
-//        passwordTextField.snp.makeConstraints {
-//            $0.leading.equalTo(inputContainerView.snp.leading).offset(12)
-//            $0.trailing.equalTo(inputContainerView.snp.trailing).offset(-12)
-//            $0.top.equalTo(emailSeparatorLine.snp.bottom)
-//            $0.height.equalTo(50)
-//        }
-//    }
+
+    private func setupAnimationView() {
+        view.addSubview(noodlesAnimationView)
+        
+        noodlesAnimationView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalTo(segmentedControl.snp.top).offset(-10)
+            $0.width.equalTo(175)
+            $0.height.equalTo(175)
+        }
+    }
     
     private func setupRegisterBtn(){
         view.addSubview(confirmBtn)
@@ -193,23 +151,20 @@ class MemberViewController: UIViewController {
     @objc func switchContentText(sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
-            inputStackView.snp.updateConstraints {
-                $0.height.equalTo(152)
+            
+            UIView.animate(withDuration: 0.3) {
+                self.inputStackView.arrangedSubviews.first?.alpha = 1
+                self.inputStackView.arrangedSubviews.first?.isHidden = false
             }
             
-            UIView.animate(withDuration: 0.5) {
-                self.inputStackView.arrangedSubviews.first?.isHidden = false
-                self.view.layoutSubviews()
-            }
             confirmBtn.setTitle("注冊", for: .normal)
         default:
-            inputStackView.snp.updateConstraints {
-                $0.height.equalTo(101)
-            }
             
-            UIView.animate(withDuration: 0.5) {
+            UIView.animate(withDuration: 0.3) {
+                self.inputStackView.arrangedSubviews.first?.alpha = 0
                 self.inputStackView.arrangedSubviews.first?.isHidden = true
             }
+            
             confirmBtn.setTitle("登入", for: .normal)
         }
     }

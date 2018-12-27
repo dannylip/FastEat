@@ -13,3 +13,7 @@ struct IdentityName {
     static let showRestDetailIden = "showRestDetail"
     static let foodItemtableCellIden = "showFoodItemCell"
 }
+
+struct UserDefaultsKey {
+    static let KEY_PUSH_TOKEN = "KEY_PUSH_TOKEN"
+}

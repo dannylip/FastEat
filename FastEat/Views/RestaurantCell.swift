@@ -30,37 +30,27 @@ class RestaurantCell: UITableViewCell {
     }
     
     private var isEnabledAnimation = true
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         animate(isHighlighted: true)
     }
-    
+
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesCancelled(touches, with: event)
         animate(isHighlighted: false)
     }
-    
+
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         animate(isHighlighted: false)
     }
-    
-    func freezeAnimations() {
-        isEnabledAnimation = false
-        restImageView.layer.removeAllAnimations()
-        layer.removeAllAnimations()
-    }
-    
-    func unfreezeAnimations() {
-        isEnabledAnimation = true
-    }
-    
+
     private func animate(isHighlighted: Bool, completion: ((Bool) -> Void)? = nil) {
         if !isEnabledAnimation {
             return
         }
-        
+
         if isHighlighted {
             UIView.animate(withDuration: 0.5,
                            delay: 0,

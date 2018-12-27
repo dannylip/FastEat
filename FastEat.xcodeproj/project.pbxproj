@@ -133,12 +133,12 @@
 		2C8A6FD221B3AFD9007EA7B3 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				2C24FEFE2165ED0200A93B39 /* MapViewController.swift */,
+				2C8A6FCD21B2EFC8007EA7B3 /* LaunchScreenViewController.swift */,
 				2C96EE36214975A20015AD0F /* RestaurantListViewController.swift */,
+				2C24FEFE2165ED0200A93B39 /* MapViewController.swift */,
 				2C95DCB4219594D50032C1C7 /* RestaurantDetailViewController.swift */,
 				2C8A6FBB21ABC3C1007EA7B3 /* BasketListViewController.swift */,
 				2C021B4B21B7C2ED00C70A8B /* MemberViewController.swift */,
-				2C8A6FCD21B2EFC8007EA7B3 /* LaunchScreenViewController.swift */,
 				2C24FEF8216236A200A93B39 /* CustomActionController.swift */,
 				2C021B5121BC0F2700C70A8B /* PresentTransition.swift */,
 			);

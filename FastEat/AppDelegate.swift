@@ -23,7 +23,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         GMSPlacesClient.provideAPIKey(googleApiKey)
         GMSServices.provideAPIKey(googleApiKey)
+        application.registerForRemoteNotifications()
+        
+        UserDefaults.standard.string(forKey: UserDefaultsKey.KEY_PUSH_TOKEN)
         return true
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+        // Send token to server
+        // Or save to userDefaults
+        UserDefaults.standard.set(token, forKey: UserDefaultsKey.KEY_PUSH_TOKEN)
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
     }
 }
 
