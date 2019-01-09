@@ -15,7 +15,7 @@ class LaunchScreenViewController: UIViewController {
     private var timer = Timer()
     
     private lazy var truckRunningAnimationView: LOTAnimationView = {
-        let view = LOTAnimationView(name: "truck_running")
+        let view = LOTAnimationView(name: AnimationName.truckRunning)
         return view
     }()
     
@@ -52,7 +52,7 @@ class LaunchScreenViewController: UIViewController {
         timer.invalidate()
         
         if let window = UIApplication.shared.keyWindow,
-            let tabBarController = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController")
+            let tabBarController = self.storyboard?.instantiateViewController(withIdentifier: IdentityName.tabBarControllerIden)
         {
             window.rootViewController = tabBarController
         }

@@ -124,12 +124,12 @@ class BasketListViewController: UIViewController {
     }()
     
     private lazy var loadingAnimationView: LOTAnimationView = {
-        let view = LOTAnimationView(name: "loading_rainbow")
+        let view = LOTAnimationView(name: AnimationName.loadingRainbow)
         return view
     }()
     
     private lazy var checkedAnimationView: LOTAnimationView = {
-        let view = LOTAnimationView(name: "checked_done_")
+        let view = LOTAnimationView(name: AnimationName.checkedDone)
         return view
     }()
     

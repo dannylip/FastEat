@@ -11,7 +11,7 @@ import XLActionController
 import GoogleMaps
 
 class RestaurantListViewController: UIViewController {
-
+    
     @IBOutlet private weak var restCountText: UILabel!
     @IBOutlet private weak var locationBtn: UIButton!
     @IBOutlet private weak var restListTableView: UITableView!
@@ -19,6 +19,10 @@ class RestaurantListViewController: UIViewController {
     private var restList: [Restaurant] = []
     private var userLocation = ""
     private let refreshControl = UIRefreshControl()
+    private let presentTransition = PresentTransition()
+    private let dismissTransition = DismissTransition()
+    private var selectedCellContentFrame = CGRect()
+    private var selectedCell = RestaurantCell()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -132,24 +136,24 @@ class RestaurantListViewController: UIViewController {
     }
     
     private func updateRestListByUserAddress(userAddress: String) {
-//        if userAddress == "" {
-//            self.locationBtn.setTitle("所有餐廳", for: .normal)
-//        } else {
+        //        if userAddress == "" {
+        //            self.locationBtn.setTitle("所有餐廳", for: .normal)
+        //        } else {
         self.locationBtn.setTitle("現在位置： \(userAddress)", for: .normal)
-//        }
+        //        }
         self.userLocation = userAddress
         self.getRestaurantInfoByJson()
     }
-
+    
     @IBAction private func locationBtnDidTap(_ sender: AnyObject) {
         
         let actionSheet = CustomActionController()
         actionSheet.settings.animation.scale = nil
         actionSheet.headerData = "送餐地址"
         
-//        actionSheet.addAction(Action(ActionData(title: "所有餐廳", image: UIImage(named: "store")!), style: .default, handler: { action in
-//            self.updateRestListByUserAddress(userAddress: "")
-//        }))
+        //        actionSheet.addAction(Action(ActionData(title: "所有餐廳", image: UIImage(named: "store")!), style: .default, handler: { action in
+        //            self.updateRestListByUserAddress(userAddress: "")
+        //        }))
         actionSheet.addAction(Action(ActionData(title: "送餐到別的位置", image: UIImage(named: "map")!), style: .default, handler: { action in
             let mapVC = self.storyboard?.instantiateViewController(withIdentifier: "mapViewController") as! MapViewController
             mapVC.locationDelegate = self
@@ -160,7 +164,7 @@ class RestaurantListViewController: UIViewController {
         actionSheet.addAction(Action(ActionData(title: "送餐到我的位置", image: UIImage(named: "placeholder")!), style: .default, handler: { action in
             LocationManager.shared.startUpdatingLocation()
         }))
-
+        
         present(actionSheet, animated: true, completion: nil)
     }
     
@@ -179,22 +183,18 @@ class RestaurantListViewController: UIViewController {
         LocationManager.shared.stopUpdatingLocation()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == IdentityName.showRestDetailIden {
-            let destVC = segue.destination as! RestaurantDetailViewController
-            if let restaurant = sender as? Restaurant {
-                destVC.restaurant = restaurant
-            }
-        }
-    }
-    
-//    private let presentTransition = PresentTransition()
-//    private var selectedCellContentFrame = CGRect()
-//    private var selectedCell = RestaurantCell()
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == IdentityName.showRestDetailIden {
+//            let destVC = segue.destination as! RestaurantDetailViewController
+//            if let restaurant = sender as? Restaurant {
+//                destVC.restaurant = restaurant
+//            }
+//        }
+//    }
 }
 
 extension RestaurantListViewController: SelectedLocationDelegate {
-
+    
     func didTapUserAddress(userAddress: String) {
         updateRestListByUserAddress(userAddress: userAddress)
     }
@@ -208,12 +208,12 @@ extension RestaurantListViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let restaurant = restList[indexPath.row]
-
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: IdentityName.tableCellIden) as! RestaurantCell
-
+        
         cell.setupRestaurant(restaurant: restaurant)
         return cell
-
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -221,38 +221,30 @@ extension RestaurantListViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let restaurant = restList[indexPath.row]
-        performSegue(withIdentifier: IdentityName.showRestDetailIden, sender: restaurant)
+        tableView.deselectRow(at: indexPath, animated: true)
+        guard let cell = tableView.cellForRow(at: indexPath) as? RestaurantCell else { return }
         
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        guard let cell = tableView.cellForRow(at: indexPath) as? RestaurantCell else { return }
-//        cell.freezeAnimations()
-//
-//        let currentCellFrame = cell.restImageView.layer.presentation()!.frame
-//        presentTransition.originFrame = cell.convert(currentCellFrame, to: nil)
-//
+        let currentCellFrame = cell.restImageView.layer.presentation()!.frame
+        presentTransition.originFrame = cell.convert(currentCellFrame, to: nil)
+        
 //        selectedCellContentFrame = cell.convert(cell.restImageView.frame, to: nil)
-//
-//        let detailVC = self.storyboard?.instantiateViewController(withIdentifier: showRestDetailIden) as! RestaurantDetailViewController
-//        detailVC.restaurant = restList[indexPath.row]
-//        detailVC.transitioningDelegate = self
-//        detailVC.modalPresentationStyle = .overCurrentContext
-//
-//        present(detailVC, animated: true, completion: {
-//            cell.unfreezeAnimations()
-//            self.selectedCell = cell
-//            cell.isHidden = true
-//        })
+        
+        let detailVC = self.storyboard?.instantiateViewController(withIdentifier: IdentityName.showRestDetailIden) as! RestaurantDetailViewController
+        detailVC.restaurant = restList[indexPath.row]
+        detailVC.transitioningDelegate = self
+        detailVC.modalPresentationStyle = .overCurrentContext
+        
+        tabBarController?.present(detailVC, animated: true)
     }
 }
 
-//extension RestaurantListViewController: UIViewControllerTransitioningDelegate {
-//    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-//        return presentTransition
-//    }
-//
+extension RestaurantListViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return presentTransition
+    }
+    
 //    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
 //        dismissTransition.toCellFrame = selectedCellContentFrame
 //        return dismissTransition
 //    }
-//}
+}

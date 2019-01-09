@@ -13,7 +13,7 @@ import Lottie
 class MemberViewController: UIViewController {
     
     private lazy var noodlesAnimationView: LOTAnimationView = {
-        let view = LOTAnimationView(name: "dino_dance")
+        let view = LOTAnimationView(name: AnimationName.dinoDance)
         return view
     }()
     
